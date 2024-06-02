@@ -9,7 +9,7 @@ const app = express();
 //middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://bit-craft-e7008.web.app"],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -42,9 +42,14 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
-    // ==========================> Auth related  route implementation <=============================
-    // create token
-
+    // ==========================> product related  route implementation <=============================
+    const productCollection = client.db("bit-craft").collection("products");
+    // get all product
+    app.get("/products", async (req, res) => {
+      const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
