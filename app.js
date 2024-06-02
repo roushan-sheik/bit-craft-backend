@@ -44,6 +44,13 @@ async function run() {
     // await client.connect();
     // ==========================> product related  route implementation <=============================
     const productCollection = client.db("bit-craft").collection("products");
+    // create product
+    app.post("/product/posts", async (req, res) => {
+      const newItem = req.body;
+      console.log(newItem);
+      const result = await productCollection.insertOne(newItem);
+      res.send(result);
+    });
     // get all product
     app.get("/products", async (req, res) => {
       const cursor = productCollection.find();
@@ -59,7 +66,7 @@ async function run() {
       res.send(result);
     });
     // get my blogs
-    app.get("/myproducts/:email", async (req, res) => {
+    app.get("/products/my/:email", async (req, res) => {
       console.log(req.params.email);
       const result = await productCollection
         .find({ user_email: req.params.email })
