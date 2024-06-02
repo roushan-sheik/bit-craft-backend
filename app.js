@@ -45,7 +45,7 @@ async function run() {
     // ==========================> product related  route implementation <=============================
     const productCollection = client.db("bit-craft").collection("products");
     // create product
-    app.post("/product/posts", async (req, res) => {
+    app.post("/product/post", async (req, res) => {
       const newItem = req.body;
       console.log(newItem);
       const result = await productCollection.insertOne(newItem);
