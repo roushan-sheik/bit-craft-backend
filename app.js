@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 // Home and health route
 app.get("/", (req, res) => {
-  res.send("Hello doctor");
+  res.send("Hello BitCraft");
 });
 // health
 app.get("/health", (req, res) => {
@@ -81,6 +81,28 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+    // update product route
+    app.put("/product/update/:id", async (req, res) => {
+      console.log(req.params.id);
+      const query = { _id: new ObjectId(req.params.id) };
+      const options = { upsert: true };
+      const data = {
+        $set: {
+          name: req.body.name,
+          title: req.body.title,
+          image: req.body.image,
+          category: req.body.category,
+          description: req.body.description,
+        },
+      };
+      const result = await productCollection.updateOne(query, data, options);
+      res.send(result);
+    });
+    // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
+    // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
+    // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
+    // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
+    // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
