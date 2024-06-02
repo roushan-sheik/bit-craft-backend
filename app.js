@@ -58,12 +58,12 @@ async function run() {
       });
       res.send(result);
     });
-    // update product route 
-    app.get("product/update/:id", async (req, res) => {
-      console.log(req.params.id);
-      const result = await productCollection.findOne({
-        _id: new ObjectId(req.params.id),
-      });
+    // get my blogs
+    app.get("/myproducts/:email", async (req, res) => {
+      console.log(req.params.email);
+      const result = await productCollection
+        .find({ user_email: req.params.email })
+        .toArray();
       res.send(result);
     });
     // Send a ping to confirm a successful connection

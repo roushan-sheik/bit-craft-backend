@@ -193,14 +193,7 @@ async function run() {
       });
       res.send(result);
     });
-    // update blog route added
-    app.get("/updateblog/:id", async (req, res) => {
-      console.log(req.params.id);
-      const result = await blogCollection.findOne({
-        _id: new ObjectId(req.params.id),
-      });
-      res.send(result);
-    });
+
     // get my blogs
     app.get("/myblog/:email", async (req, res) => {
       console.log(req.params.email);
