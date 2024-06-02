@@ -50,6 +50,14 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // get single product
+    app.get("/product/details/:id", async (req, res) => {
+      console.log(req.params.id);
+      const result = await productCollection.findOne({
+        _id: new ObjectId(req.params.id),
+      });
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
