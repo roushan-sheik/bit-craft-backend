@@ -42,6 +42,26 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
+    // ==========================> vote related  route implementation <=============================
+    const voteCollection = client.db( "bit-craft" ).collection( "vote" );
+    
+    // add vote
+    app.post("/vote", async (req, res) => {
+      const newItem = req.body;
+      // find vote
+      const reslt = await voteCollection.find({
+        blog_id: newItem.blog_id,
+      });
+      const data = await reslt.toArray();
+      const voteResutl = data.filter((item) => item.email === newItem.email);
+      if (voteResutl.length !== 0) {
+        res.status(422).send("You have voted");
+        return;
+      }
+      const result = await voteCollection.insertOne(newItem);
+      // Send the inserted comment as response
+      res.status(201).send(result);
+    });
     // ==========================> product related  route implementation <=============================
     const productCollection = client.db("bit-craft").collection("products");
     // create product
@@ -91,7 +111,7 @@ async function run() {
           name: req.body.name,
           title: req.body.title,
           image: req.body.image,
-          category: req.body.category,
+          tags: req.body.tags,
           description: req.body.description,
         },
       };

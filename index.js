@@ -87,27 +87,7 @@ async function run() {
     });
     // ==========================> Wishlist  route implementation <=============================
     const wishlistCollection = client.db("blogWebDB").collection("wishlist");
-    // get all wishlist blog
-    app.get("/wishlist", async (req, res) => {
-      const cursor = wishlistCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    // add to wishlist
-    app.post("/wishlist", async (req, res) => {
-      const newItem = req.body;
-      const reslt = await wishlistCollection.find({
-        blog_id: newItem.blog_id,
-      });
-      const data = await reslt.toArray();
-      if (data.length !== 0) {
-        res.status(422).send("Already exist");
-        return;
-      }
-      const result = await wishlistCollection.insertOne(newItem);
-      // Send the inserted comment as response
-      res.status(201).send(result);
-    });
+
     // get user wishlist
     app.get( "/wishlist/:user_email",
       async ( req, res ) =>
@@ -164,14 +144,7 @@ async function run() {
     });
     // ==========================> Blog route implementation <=============================
     const blogCollection = client.db("blogWebDB").collection("blogPosts");
-    // get all blogs
-    app.get("/blogposts", async (req, res) => {
-      const cursor = blogCollection.find();
-      const result = await cursor.toArray();
-
-      console.log("tok tokkkkk", req.cookies.token);
-      res.send(result);
-    });
+  
 
     // get featured data
     app.get("/featuredblog", async (req, res) => {
@@ -185,14 +158,7 @@ async function run() {
       const topPost = sortedDesc.slice(0, 10);
       res.json(topPost);
     });
-    // get single blog
-    app.get("/blogdetails/:id", async (req, res) => {
-      console.log(req.params.id);
-      const result = await blogCollection.findOne({
-        _id: new ObjectId(req.params.id),
-      });
-      res.send(result);
-    });
+ 
 
     // get my blogs
     app.get("/myblog/:email", async (req, res) => {
@@ -202,38 +168,8 @@ async function run() {
         .toArray();
       res.send(result);
     });
-    // create blog
-    app.post("/blogposts", async (req, res) => {
-      const newItem = req.body;
-      console.log(newItem);
-      const result = await blogCollection.insertOne(newItem);
-      res.send(result);
-    });
-    // delete blog post
-    app.delete("/delete/:id", async (req, res) => {
-      const result = await blogCollection.deleteOne({
-        _id: new ObjectId(req.params.id),
-      });
-      console.log(result);
-      res.send(result);
-    });
-    // update blog route
-    app.put("/updateChanges/:id", async (req, res) => {
-      console.log(req.params.id);
-      const query = { _id: new ObjectId(req.params.id) };
-      const options = { upsert: true };
-      const data = {
-        $set: {
-          title: req.body.title,
-          image_url: req.body.image_url,
-          category: req.body.category,
-          short_description: req.body.short_description,
-          long_description: req.body.long_description,
-        },
-      };
-      const result = await blogCollection.updateOne(query, data, options);
-      res.send(result);
-    });
+  
+ 
     // filter blog by search input
     app.get("/searchInput/:text", async (req, res) => {
       const searchText = req.params.text;
