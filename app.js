@@ -46,32 +46,23 @@ async function run() {
     // ==========================> vote related  route implementation <=============================
     // ==========================> vote related  route implementation <=============================
     const voteCollection = client.db("bit-craft").collection("vote");
+    // get all product
+    app.get("/vote", async (req, res) => {
+      const cursor = voteCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // get all vote
     app.get("/vote/:id", async (req, res) => {
       const id = req.params.id;
       // find vote
-      const result = await voteCollection.find({
-        blog_id: id,
-      });
-      res.send(result);
+      const cursor = voteCollection.find();
+      const result = await cursor.toArray();
+      //  check is exist
+      const existResutl = result.filter((item) => item.blog_id === id);
+      res.send(existResutl);
     });
-    // add vote
-    app.post("/vote", async (req, res) => {
-      const newItem = req.body;
-      // find vote
-      const reslt = await voteCollection.find({
-        blog_id: newItem.blog_id,
-      });
-      const data = await reslt.toArray();
-      const voteResutl = data.filter((item) => item.email === newItem.email);
-      if (voteResutl.length !== 0) {
-        res.status(422).send("You have voted");
-        return;
-      }
-      const result = await voteCollection.insertOne(newItem);
-      // Send the inserted comment as response
-      res.status(201).send(result);
-    });
+
     // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
@@ -125,10 +116,49 @@ async function run() {
           image: req.body.image,
           tags: req.body.tags,
           description: req.body.description,
+          vote: req.body.vote,
         },
       };
       const result = await productCollection.updateOne(query, data, options);
       res.send(result);
+    });
+    // UpVote down vote
+    app.patch("/update-vote/:id", async (req, res) => {
+      const { id } = req.params;
+      const { userEmail, upVote, downVote } = req.body;
+
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).send("Invalid ID format");
+      }
+      try {
+        const document = await productCollection.findOne({
+          _id: new ObjectId(id),
+        });
+        if (!document) {
+          return res.status(404).send("Document not found");
+        }
+        if (document.vote.users.includes(userEmail)) {
+          return res.status(400).send("User has already voted");
+        }
+        const update = {
+          $addToSet: { "vote.users": userEmail },
+          $inc: {},
+        };
+        if (typeof upVote === "number") update.$inc["vote.upVote"] = upVote;
+        if (typeof downVote === "number")
+          update.$inc["vote.downVote"] = downVote;
+        const result = await productCollection.updateOne(
+          { _id: new ObjectId(id) },
+          update
+        );
+        if (result.modifiedCount === 0) {
+          return res.status(400).send("No changes made");
+        }
+        res.send("Vote count updated and user added successfully");
+      } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal server error");
+      }
     });
     // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
     // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
