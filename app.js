@@ -53,6 +53,12 @@ async function run() {
       const result = await reviewCollection.insertOne(newItem);
       res.send(result);
     });
+    // get all review
+    app.get("/reviews", async (req, res) => {
+      const cursor = reviewCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
