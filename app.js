@@ -43,8 +43,18 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // ==========================> vote related  route implementation <=============================
-    const voteCollection = client.db( "bit-craft" ).collection( "vote" );
-    
+    // ==========================> vote related  route implementation <=============================
+    // ==========================> vote related  route implementation <=============================
+    const voteCollection = client.db("bit-craft").collection("vote");
+    // get all vote
+    app.get("/vote/:id", async (req, res) => {
+      const id = req.params.id;
+      // find vote
+      const result = await voteCollection.find({
+        blog_id: id,
+      });
+      res.send(result);
+    });
     // add vote
     app.post("/vote", async (req, res) => {
       const newItem = req.body;
@@ -62,6 +72,8 @@ async function run() {
       // Send the inserted comment as response
       res.status(201).send(result);
     });
+    // ==========================> product related  route implementation <=============================
+    // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
     const productCollection = client.db("bit-craft").collection("products");
     // create product
