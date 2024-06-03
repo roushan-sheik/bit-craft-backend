@@ -45,24 +45,14 @@ async function run() {
     // ==========================> vote related  route implementation <=============================
     // ==========================> vote related  route implementation <=============================
     // ==========================> vote related  route implementation <=============================
-    const voteCollection = client.db("bit-craft").collection("vote");
-    // get all product
-    app.get("/vote", async (req, res) => {
-      const cursor = voteCollection.find();
-      const result = await cursor.toArray();
+    const reviewCollection = client.db("bit-craft").collection("reviews");
+    // create  review route added
+    app.post("/review/post", async (req, res) => {
+      const newItem = req.body;
+      console.log(newItem);
+      const result = await reviewCollection.insertOne(newItem);
       res.send(result);
     });
-    // get all vote
-    app.get("/vote/:id", async (req, res) => {
-      const id = req.params.id;
-      // find vote
-      const cursor = voteCollection.find();
-      const result = await cursor.toArray();
-      //  check is exist
-      const existResutl = result.filter((item) => item.blog_id === id);
-      res.send(existResutl);
-    });
-
     // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
