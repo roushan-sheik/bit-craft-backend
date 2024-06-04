@@ -109,6 +109,16 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+    // get trending  products
+    app.get("/products/trending", async (req, res) => {
+      const description = await productCollection.find().toArray();
+      const trendingProducts = description.sort((a, b) => {
+        return b.vote.upVote - a.vote.upVote;
+      });
+      console.log(trendingProducts);
+      res.json(trendingProducts);
+    });
+
     // update product route
     app.put("/product/update/:id", async (req, res) => {
       console.log(req.params.id);
