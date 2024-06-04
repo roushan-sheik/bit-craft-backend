@@ -163,6 +163,14 @@ async function run() {
       console.log(trendingProducts);
       res.json(trendingProducts);
     });
+    // get Accepted products
+    app.get("/products/accepted", async (req, res) => {
+      const allProducts = await productCollection.find().toArray();
+      const acceptedProducts = allProducts.filter(
+        (product) => product.status === "Accepted"
+      );
+      res.send(acceptedProducts);
+    });
 
     // update product route
     app.put("/product/update/:id", async (req, res) => {
@@ -175,6 +183,7 @@ async function run() {
           title: req.body.title,
           image: req.body.image,
           tags: req.body.tags,
+          status: req.body.status,
           description: req.body.description,
           vote: req.body.vote,
         },
