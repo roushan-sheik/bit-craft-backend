@@ -49,8 +49,22 @@ async function run() {
     // create  user route added
     app.post("/users/post", async (req, res) => {
       const newItem = req.body;
+      console.log(newItem);
+      // Check if user already exists based on email
+      const existingUser = await userCollection.findOne({
+        email: newItem.email,
+      });
+
+      console.log(existingUser);
+      if (existingUser) {
+        // User already exists, send an appropriate response
+        return res
+          .status(400)
+          .json({ message: "User with this email already exists" });
+      }
+      // Insert the new user if not already existing
       const result = await userCollection.insertOne(newItem);
-      res.send(result);
+      res.status(201).send(result);
     });
     // get single user
     app.get("/users/details/:email", async (req, res) => {
@@ -63,6 +77,13 @@ async function run() {
     app.get("/users", async (req, res) => {
       const cursor = userCollection.find();
       const result = await cursor.toArray();
+      res.send(result);
+    });
+    // delete product post
+    app.delete("/users/delete/:id", async (req, res) => {
+      const result = await userCollection.deleteOne({
+        _id: new ObjectId(req.params.id),
+      });
       res.send(result);
     });
 
