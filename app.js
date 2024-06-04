@@ -229,6 +229,22 @@ async function run() {
         res.status(500).send("Internal server error");
       }
     });
+    // search product  by search input
+    app.get("/products/accepted/:text", async (req, res) => {
+      const searchText = req.params.text.toLowerCase();
+      const productData = await productCollection.find().toArray();
+      // get accepted product
+      const acceptedProducts = productData.filter(
+        (product) => product.status === "Accepted"
+      );
+      if (!searchText) {
+        res.send(acceptedProducts);
+      }
+      const searchResult = acceptedProducts.filter((product) =>
+        product.tags.toString().toLowerCase().match(searchText)
+      );
+      res.send(searchResult);
+    });
     // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
     // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
     // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
