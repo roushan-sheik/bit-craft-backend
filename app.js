@@ -59,6 +59,15 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // get product reviews
+    app.get("/reviews/:id", async (req, res) => {
+      console.log(req.params.id);
+      const result = await reviewCollection.find({
+        product_id: req.params.id,
+      });
+      const data = await result.toArray();
+      res.send(data);
+    });
     // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
     // ==========================> product related  route implementation <=============================
