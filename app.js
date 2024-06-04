@@ -42,9 +42,33 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
-    // ==========================> vote related  route implementation <=============================
-    // ==========================> vote related  route implementation <=============================
-    // ==========================> vote related  route implementation <=============================
+    // ==========================> user related  route implementation <=============================
+    // ==========================> user related  route implementation <=============================
+    // ==========================> user related  route implementation <=============================
+    const userCollection = client.db("bit-craft").collection("users");
+    // create  user route added
+    app.post("/users/post", async (req, res) => {
+      const newItem = req.body;
+      const result = await userCollection.insertOne(newItem);
+      res.send(result);
+    });
+    // get single user
+    app.get("/users/details/:email", async (req, res) => {
+      const result = await userCollection.findOne({
+        email: req.params.email,
+      });
+      res.send(result);
+    });
+    // get all users
+    app.get("/users", async (req, res) => {
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // ==========================> review related  route implementation <=============================
+    // ==========================> review related  route implementation <=============================
+    // ==========================> review related  route implementation <=============================
     const reviewCollection = client.db("bit-craft").collection("reviews");
     // create  review route added
     app.post("/review/post", async (req, res) => {
