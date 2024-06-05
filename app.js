@@ -73,6 +73,16 @@ async function run() {
       });
       res.send(result);
     });
+    // get user status
+    app.get("/user/status/:email", async (req, res) => {
+      const user = await userCollection.findOne({
+        email: req.params.email,
+      });
+      if (user.status === true) {
+        res.send({ status: true });
+      }
+      res.send({ status: false });
+    });
     // get all users
     app.get("/users", async (req, res) => {
       const cursor = userCollection.find();
