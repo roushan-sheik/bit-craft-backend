@@ -138,7 +138,7 @@ async function run() {
       });
       res.send(result);
     });
-    // get my blogs
+    // get my products
     app.get("/products/my/:email", async (req, res) => {
       console.log(req.params.email);
       const result = await productCollection
@@ -151,16 +151,15 @@ async function run() {
       const result = await productCollection.deleteOne({
         _id: new ObjectId(req.params.id),
       });
-      console.log(result);
+
       res.send(result);
     });
     // get trending  products
     app.get("/products/trending", async (req, res) => {
-      const description = await productCollection.find().toArray();
-      const trendingProducts = description.sort((a, b) => {
+      const allProducts = await productCollection.find().toArray();
+      const trendingProducts = allProducts.sort((a, b) => {
         return b.vote.upVote - a.vote.upVote;
       });
-      console.log(trendingProducts);
       res.json(trendingProducts);
     });
     // get Accepted products
@@ -183,9 +182,7 @@ async function run() {
           title: req.body.title,
           image: req.body.image,
           tags: req.body.tags,
-          status: req.body.status,
           description: req.body.description,
-          vote: req.body.vote,
         },
       };
       const result = await productCollection.updateOne(query, data, options);
