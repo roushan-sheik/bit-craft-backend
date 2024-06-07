@@ -83,6 +83,14 @@ async function run() {
       }
       res.send({ status: false });
     });
+    // get user Role
+    app.get("/user/role/:email", async (req, res) => {
+      const user = await userCollection.findOne({
+        email: req.params.email,
+      });
+
+      res.send(user.Role);
+    });
     // get all users
     app.get("/users", async (req, res) => {
       const cursor = userCollection.find();
@@ -177,6 +185,14 @@ async function run() {
       const allProducts = await productCollection.find().toArray();
       const acceptedProducts = allProducts.filter(
         (product) => product.status === "Accepted"
+      );
+      res.send(acceptedProducts);
+    });
+    // get Pending products
+    app.get("/products/pending", async (req, res) => {
+      const allProducts = await productCollection.find().toArray();
+      const acceptedProducts = allProducts.filter(
+        (product) => product.status === "Pending"
       );
       res.send(acceptedProducts);
     });
