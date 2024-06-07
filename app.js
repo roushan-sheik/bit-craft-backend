@@ -238,6 +238,25 @@ async function run() {
         });
       }
     });
+    // update product featured
+    app.put("/products/update/featured/:id", async (req, res) => {
+      try {
+        const query = { _id: new ObjectId(req.params.id) };
+        const options = { upsert: false }; // Typically, upsert should be false for update
+        const data = {
+          $set: {
+            featured: req.body.featured,
+          },
+        };
+        const result = await productCollection.updateOne(query, data, options);
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          message: "An error occurred while updating the product featured.",
+          error: error.message,
+        });
+      }
+    });
 
     // UpVote down vote
     app.patch("/update-vote/:id", async (req, res) => {
