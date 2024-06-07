@@ -194,6 +194,14 @@ async function run() {
       );
       res.send(acceptedProducts);
     });
+    // get Pending products
+    app.get("/products/featured", async (req, res) => {
+      const allProducts = await productCollection.find().toArray();
+      const featuredProduct = allProducts.filter(
+        (product) => product.featured === true
+      );
+      res.send(featuredProduct);
+    });
 
     // update product route
     app.put("/product/update/:id", async (req, res) => {
