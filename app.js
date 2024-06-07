@@ -150,7 +150,6 @@ async function run() {
     });
     // get single product
     app.get("/product/details/:id", async (req, res) => {
-      console.log(req.params.id);
       const result = await productCollection.findOne({
         _id: new ObjectId(req.params.id),
       });
@@ -169,7 +168,6 @@ async function run() {
       const result = await productCollection.deleteOne({
         _id: new ObjectId(req.params.id),
       });
-
       res.send(result);
     });
     // get trending  products
@@ -199,7 +197,6 @@ async function run() {
 
     // update product route
     app.put("/product/update/:id", async (req, res) => {
-      console.log(req.params.id);
       const query = { _id: new ObjectId(req.params.id) };
       const options = { upsert: true };
       const data = {
@@ -214,6 +211,26 @@ async function run() {
       const result = await productCollection.updateOne(query, data, options);
       res.send(result);
     });
+    // update product status
+    app.put("/product/update/status/:id", async (req, res) => {
+      try {
+        const query = { _id: new ObjectId(req.params.id) };
+        const options = { upsert: false }; // Typically, upsert should be false for update
+        const data = {
+          $set: {
+            status: req.body.status,
+          },
+        };
+        const result = await productCollection.updateOne(query, data, options);
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          message: "An error occurred while updating the product status.",
+          error: error.message,
+        });
+      }
+    });
+
     // UpVote down vote
     app.patch("/update-vote/:id", async (req, res) => {
       const { id } = req.params;
