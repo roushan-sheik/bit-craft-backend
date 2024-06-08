@@ -108,6 +108,16 @@ async function run() {
     // ==========================> review related  route implementation <=============================
     // ==========================> review related  route implementation <=============================
     // ==========================> review related  route implementation <=============================
+    const reportCollection = client.db("bit-craft").collection("reports");
+    // create  report route added
+    app.post("/report/post", async (req, res) => {
+      const newItem = req.body;
+      const result = await reviewCollection.insertOne(newItem);
+      res.send(result);
+    });
+    // ==========================> review related  route implementation <=============================
+    // ==========================> review related  route implementation <=============================
+    // ==========================> review related  route implementation <=============================
     const reviewCollection = client.db("bit-craft").collection("reviews");
     // create  review route added
     app.post("/review/post", async (req, res) => {
@@ -189,12 +199,23 @@ async function run() {
     // get Pending products
     app.get("/products/pending", async (req, res) => {
       const allProducts = await productCollection.find().toArray();
-      const acceptedProducts = allProducts.filter(
+      const pendingProducts = allProducts.filter(
         (product) => product.status === "Pending"
       );
-      res.send(acceptedProducts);
+      const acceptedProducts = allProducts.filter(
+        (product) => product.status === "Accepted"
+      );
+      const rejectedProducts = allProducts.filter(
+        (product) => product.status === "Accepted"
+      );
+      const result = [
+        ...pendingProducts,
+        ...acceptedProducts,
+        ...rejectedProducts,
+      ];
+      res.send(allProducts);
     });
-    // get Pending products
+    // get featured products
     app.get("/products/featured", async (req, res) => {
       const allProducts = await productCollection.find().toArray();
       const featuredProduct = allProducts.filter(
