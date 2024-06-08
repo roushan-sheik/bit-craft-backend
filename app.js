@@ -112,7 +112,13 @@ async function run() {
     // create  report route added
     app.post("/report/post", async (req, res) => {
       const newItem = req.body;
-      const result = await reviewCollection.insertOne(newItem);
+      const result = await reportCollection.insertOne(newItem);
+      res.send(result);
+    });
+    // get all reports
+    app.get("/reports", async (req, res) => {
+      const cursor = reportCollection.find();
+      const result = await cursor.toArray();
       res.send(result);
     });
     // ==========================> review related  route implementation <=============================
