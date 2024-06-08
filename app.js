@@ -121,6 +121,21 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // get product reports
+    app.get("/reports/:id", async (req, res) => {
+      const result = await reportCollection.find({
+        product_id: req.params.id,
+      });
+      const data = await result.toArray();
+      res.send(data);
+    });
+    // delete report
+    app.delete("/report/delete/:id", async (req, res) => {
+      const result = await reportCollection.deleteOne({
+        _id: new ObjectId(req.params.id),
+      });
+      res.send(result);
+    });
     // ==========================> review related  route implementation <=============================
     // ==========================> review related  route implementation <=============================
     // ==========================> review related  route implementation <=============================
