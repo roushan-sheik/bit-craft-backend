@@ -45,7 +45,12 @@ async function run() {
     // ==========================> user related  route implementation <=============================
     // ==========================> user related  route implementation <=============================
     // ==========================> user related  route implementation <=============================
+
+    // ==========================> user related  route implementation <=============================
+    // ==========================> user related  route implementation <=============================
+    // ==========================> user related  route implementation <=============================
     const userCollection = client.db("bit-craft").collection("users");
+
     // create  user route added
     app.post("/users/post", async (req, res) => {
       const newItem = req.body;
@@ -389,6 +394,32 @@ async function run() {
       );
       res.send(searchResult);
     });
+    // ========================<<<<<<<< Admin Statistics >>>>>>>>>>>>>>>>==========================
+    // Admin statistics page
+    app.get("/admin/statistic", async (req, res) => {
+      const cursor1 = userCollection.find();
+      let users = await cursor1.toArray();
+      const cursor2 = reviewCollection.find();
+      let reviews = await cursor2.toArray();
+      const cursor3 = productCollection.find();
+      let products = await cursor3.toArray();
+      let result = [
+        {
+          name: "Users",
+          value: users.length,
+        },
+        {
+          name: "Reviews",
+          value: reviews.length,
+        },
+        {
+          name: "Products",
+          value: products.length,
+        },
+      ];
+      res.send(result);
+    });
+    // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
     // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
     // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
     // ========================<<<<<<<< End >>>>>>>>>>>>>>>>==========================
