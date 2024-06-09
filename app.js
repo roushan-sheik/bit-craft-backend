@@ -53,6 +53,11 @@ async function run() {
       const result = await couponCollection.insertOne(newItem);
       res.send(result);
     });
+    // get all coupons
+    app.get("/coupons", async (req, res) => {
+      const result = await couponCollection.find().toArray();
+      res.send(result);
+    });
 
     // ==========================> user related  route implementation <=============================
     // ==========================> user related  route implementation <=============================
