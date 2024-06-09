@@ -65,7 +65,21 @@ async function run() {
       });
       res.send(result);
     });
-
+    // update coupon route
+    app.put("/coupon/update/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const options = { upsert: true };
+      const data = {
+        $set: {
+          description: req.body.description,
+          code: req.body.code,
+          expiryDate: req.body.expiryDate,
+          discountAmount: req.body.discountAmount,
+        },
+      };
+      const result = await couponCollection.updateOne(query, data, options);
+      res.send(result);
+    });
     // ==========================> user related  route implementation <=============================
     // ==========================> user related  route implementation <=============================
     // ==========================> user related  route implementation <=============================
