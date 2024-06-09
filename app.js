@@ -42,9 +42,17 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
-    // ==========================> user related  route implementation <=============================
-    // ==========================> user related  route implementation <=============================
-    // ==========================> user related  route implementation <=============================
+    // ==========================> coupon related related  route implementation <=============================
+    // ==========================> coupon related related  route implementation <=============================
+    // ==========================> coupon related related  route implementation <=============================
+    // coupon related
+    const couponCollection = client.db("bit-craft").collection("coupon");
+    // add coupon
+    app.post("/coupon/post", async (req, res) => {
+      const newItem = req.body;
+      const result = await couponCollection.insertOne(newItem);
+      res.send(result);
+    });
 
     // ==========================> user related  route implementation <=============================
     // ==========================> user related  route implementation <=============================
@@ -260,20 +268,6 @@ async function run() {
     // get Pending products
     app.get("/products/pending", async (req, res) => {
       const allProducts = await productCollection.find().toArray();
-      const pendingProducts = allProducts.filter(
-        (product) => product.status === "Pending"
-      );
-      const acceptedProducts = allProducts.filter(
-        (product) => product.status === "Accepted"
-      );
-      const rejectedProducts = allProducts.filter(
-        (product) => product.status === "Accepted"
-      );
-      const result = [
-        ...pendingProducts,
-        ...acceptedProducts,
-        ...rejectedProducts,
-      ];
       res.send(allProducts);
     });
     // get featured products
@@ -394,6 +388,9 @@ async function run() {
       );
       res.send(searchResult);
     });
+    // ========================<<<<<<<< Moderator home >>>>>>>>>>>>>>>>==========================
+
+    // ========================<<<<<<<< Admin Statistics >>>>>>>>>>>>>>>>==========================
     // ========================<<<<<<<< Admin Statistics >>>>>>>>>>>>>>>>==========================
     // Admin statistics page
     app.get("/admin/statistic", async (req, res) => {
