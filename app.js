@@ -58,6 +58,13 @@ async function run() {
       const result = await couponCollection.find().toArray();
       res.send(result);
     });
+    // delete coupon added
+    app.delete("/coupon/delete/:id", async (req, res) => {
+      const result = await couponCollection.deleteOne({
+        _id: new ObjectId(req.params.id),
+      });
+      res.send(result);
+    });
 
     // ==========================> user related  route implementation <=============================
     // ==========================> user related  route implementation <=============================
