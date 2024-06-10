@@ -16,7 +16,21 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+// verify token middleware
+const verifyToken = (req, res, next) => {
+  const token = req.cookies?.token;
 
+  if (!token) {
+    return res.status(401).send({ message: "unauthorized access" });
+  }
+  if (token) {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) res.send(401).send({ message: "unauthorized access" });
+      req.user = decoded;
+      next();
+    });
+  }
+};
 // Home and health route
 app.get("/", (req, res) => {
   res.send("Hello BitCraft");
@@ -117,10 +131,11 @@ async function run() {
       const user = await userCollection.findOne({
         email: req.params.email,
       });
-      if (user.status === true) {
+      if (user.status === "Verified") {
         res.send({ status: true });
+      } else if (user.status === "") {
+        res.send({ status: false });
       }
-      res.send({ status: false });
     });
     // get user Role
     app.get("/user/role/:email", async (req, res) => {
